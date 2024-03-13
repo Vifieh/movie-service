@@ -2,6 +2,9 @@ const express = require('express');
 const dotenv = require("dotenv");
 const { Pool } = require('pg');
 
+//Route files
+const movies = require("./routes/movies");
+
 //load env vars
 dotenv.config({path: "./config/config.env"});
 
@@ -19,11 +22,8 @@ const pool = new Pool({
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use("/api/movies", movies);
 
-// Home Page
-app.get('/', (req, res) => {
-    res.send('<h1>Welcome to the Home Page</h1><p>This is the home page of the CRUD API.</p>');
-});
 
 // Start the server
 app.listen(
