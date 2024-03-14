@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const errorHandler = require("./middleware/error");
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/movies", movies);
-
+app.use(errorHandler);
 const PORT = process.env.PORT || 3000;  // Set the port
 
 // Start the server
