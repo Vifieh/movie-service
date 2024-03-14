@@ -48,33 +48,27 @@ exports.getMovie = asyncHandler(async (request, response, next) => {
 // @route    Put /api/movies/:id
 // @access   Public
 exports.updateMovie = asyncHandler(async (request, response, next) => {
+    this.getMovie(request, response, next);
     const {id} = request.params;
     const {title, genre, releaseDate, language, rating} = request.body;
-    const [movieUpdated] = await sequelize.models.Movie.update(
+    await sequelize.models.Movie.update(
         {title, genre, releaseDate, language, rating},
         {where: {id}}
     );
-    if (movieUpdated === 0) {
-        return next(new ErrorResponse(`Movie not found with id of ${id}`, 404));
-    } else
-        response.status(204).json({success: true, message: `Updated movie: ${request.params.id}`});
+    response.status(204).json({success: true, message: `Updated movie: ${id}`});
 });
 
 // @desc     Delete movie
 // @route    Delete /api/movies/:id
 // @access   Public
-exports.deleteMovie = async (request, response, next) => {
-    try {
-        const {id} = request.params
-        const [movieDeleted] = await sequelize.models.Movie.destroy({where: {id}});
-        if (movieDeleted === 0)
-            return next(new ErrorResponse(`Movie not found with id of ${id}`, 404));
-        else
-            response.status(204).json({success: true, message: `Deleted movie: ${request.params.id}`});
-    } catch (error) {
-        next(error);
-    }
-}
+exports.deleteMovie = asyncHandler(async (request, response, next) => {
+    this.getMovie(request, response, next);
+    const {id} = request.params
+    await sequelize.models.Movie.destroy({
+        where: {id: id}
+    });
+    response.status(204).json({success: true, message: `Deleted movie: ${id}`});
+});
 
 // @desc     Delete movies
 // @route    Delete /api/movies
