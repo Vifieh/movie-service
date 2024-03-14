@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require("dotenv");
-const { Pool } = require('pg');
+const morgan = require("morgan");
+
+const app = express();
 
 //Route files
 const movies = require("./routes/movies");
@@ -8,22 +10,21 @@ const movies = require("./routes/movies");
 //load env vars
 dotenv.config({path: "./config/config.env"});
 
-const app = express();
-const PORT = process.env.PORT || 3000;  // Set the port
 
-// PostgreSQL connection configuration
-const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'movie-service',
-    password: ' ',
-    port: 5432
-});
+//Dev logging middleware
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/api/movies", movies);
 
+const PORT = process.env.PORT || 3000;  // Set the port
 
 // Start the server
 app.listen(
