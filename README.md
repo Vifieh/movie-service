@@ -13,6 +13,9 @@ Rename "config/config.env.env" to "config/config.env.env" and update the values/
 npm install
 ```
 
+- Install postgres if u have not
+In the config files "config/config.json" and "config/db.config.js" add your own local configurations
+
 ## Run App
 
 ```
